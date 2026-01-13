@@ -1,16 +1,8 @@
-/* Генератор паролей на C++
- * 
- * Реализация:
- * 1. использовать std::random_device + std::mt19937 для генерации рандомных значений (done)
- * 2. использовать все символы английского алфавита большие и маленькие, цифры и спецсимволы (done)
- * 3. убедиться что все виды символов есть в создаваемом пароле (done)
- * 4. создать пароль определенной длины миннимум в 12 символов (done)
- * 5. запросить от пользователя длину пароля (done)
- */
-
 #include <iostream>
 #include <limits>
+#include <string>
 #include "generate_password.hpp"
+
 
 #ifdef WIN32
 #define SYSTEM_CLEAR "cls"
@@ -26,8 +18,22 @@ void print_menu(){
   cout << "\n";
 }
 
-int main(){
+int main(int argc, char* argv[]){
   int length;
+  if (argc > 1) {
+    if (!strcmp(argv[1], "-h") || !strcmp(argv[1], "--help")) {
+      cout << "usage:" << endl;
+      cout << "program with no given arguments opens an interactive menu" << endl;
+      cout << "passgen <length> - generates password with the given number of characters (1-32)\n\n";
+      return 0;
+    }
+    length = atoi(argv[1]);
+    if (length > 0 && length <= 32) {
+      cout << argv[1] << endl;
+      cout << generate_password(length) << endl;
+      return 0;
+    } else cout << "max length is 32 symbols" << endl; return 0;
+  }
   while (true) {
     print_menu();
     cout << "Choose password length (between 12 and 32): ";
